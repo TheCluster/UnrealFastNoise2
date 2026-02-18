@@ -1,7 +1,8 @@
 #pragma once
-#include "Export.h"
 
 #include <cstdint>
+
+#define FASTSIMD_API
 
 namespace FastSIMD
 {
