@@ -125,26 +125,6 @@ protected:
 //////////////////////////////////////////////////////////////////////////
 
 UCLASS(BlueprintType)
-class UNREALFASTNOISE2_API UFastNoise2CheckerboardGenerator : public UFastNoise2GeneratorBase
-{
-	GENERATED_BODY()
-
-public:
-	UFUNCTION(BlueprintSetter, Category = "Fast Noise 2")
-	void SetSize(float InSize);
-
-protected:
-	UPROPERTY(EditAnywhere, Category = "Fast Noise 2", BlueprintSetter = SetSize)
-	float Size = 1.0f;
-
-	virtual FastNoise::SmartNode<FastNoise::Generator> InitGenerator() override;
-
-	FastNoise::SmartNode<FastNoise::Checkerboard> CheckerboardGeneratorInst = nullptr;
-};
-
-//////////////////////////////////////////////////////////////////////////
-
-UCLASS(BlueprintType)
 class UNREALFASTNOISE2_API UFastNoise2SineWaveGenerator : public UFastNoise2GeneratorBase
 {
 	GENERATED_BODY()
@@ -160,64 +140,6 @@ protected:
 	virtual FastNoise::SmartNode<FastNoise::Generator> InitGenerator() override;
 
 	FastNoise::SmartNode<FastNoise::SineWave> SineWaveGeneratorInst = nullptr;
-};
-
-//////////////////////////////////////////////////////////////////////////
-
-UCLASS(BlueprintType)
-class UNREALFASTNOISE2_API UFastNoise2PositionOutputGenerator : public UFastNoise2GeneratorBase
-{
-	GENERATED_BODY()
-
-public:
-	UFUNCTION(BlueprintSetter, Category = "Fast Noise 2", meta = (AutoCreateRefTerm = "InMultipliers,InOffsets"))
-	void SetData(const FVector4& InMultipliers, const FVector4& InOffsets);
-
-	UFUNCTION(BlueprintSetter, Category = "Fast Noise 2", meta = (AutoCreateRefTerm = "InMultipliers"))
-	void SetMultipliers(const FVector4& InMultipliers);
-
-	UFUNCTION(BlueprintSetter, Category = "Fast Noise 2", meta = (AutoCreateRefTerm = "InOffsets"))
-	void SetOffsets(const FVector4& InOffsets);
-
-protected:
-	UPROPERTY(EditAnywhere, Category = "Fast Noise 2", BlueprintSetter = SetMultipliers)
-	FVector4 Multipliers;
-
-	UPROPERTY(EditAnywhere, Category = "Fast Noise 2", BlueprintSetter = SetOffsets)
-	FVector4 Offsets;
-
-	virtual FastNoise::SmartNode<FastNoise::Generator> InitGenerator() override;
-
-	FastNoise::SmartNode<FastNoise::PositionOutput> PositionOutputGeneratorInst = nullptr;
-};
-
-//////////////////////////////////////////////////////////////////////////
-
-UCLASS(BlueprintType)
-class UNREALFASTNOISE2_API UFastNoise2DistanceToPointGenerator : public UFastNoise2GeneratorBase
-{
-	GENERATED_BODY()
-
-public:
-	UFUNCTION(BlueprintCallable, Category = "Fast Noise 2")
-	void SetSource(UFastNoise2GeneratorBase* InSource);
-
-	UFUNCTION(BlueprintSetter, Category = "Fast Noise 2")
-	void SetDistanceFunction(EFastNoise2DistanceFunction InDistanceFunction);
-
-	UFUNCTION(BlueprintSetter, Category = "Fast Noise 2", meta = (AutoCreateRefTerm = "InScale"))
-	void SetScale(const FVector4& InScale);
-
-protected:
-	UPROPERTY(EditAnywhere, Category = "Fast Noise 2", BlueprintSetter = SetScale)
-	FVector4 Scale;
-
-	UPROPERTY(EditAnywhere, Category = "Fast Noise 2", BlueprintSetter = SetDistanceFunction)
-	EFastNoise2DistanceFunction DistanceFunction;
-
-	virtual FastNoise::SmartNode<FastNoise::Generator> InitGenerator() override;
-
-	FastNoise::SmartNode<FastNoise::DistanceToPoint> DistanceToPointGeneratorInst = nullptr;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -257,86 +179,6 @@ protected:
 	virtual FastNoise::SmartNode<FastNoise::Generator> InitGenerator() override;
 
 	FastNoise::SmartNode<FastNoise::Simplex> SimplexGeneratorInst = nullptr;
-};
-
-//////////////////////////////////////////////////////////////////////////
-
-UCLASS(Abstract, BlueprintType)
-class UNREALFASTNOISE2_API UFastNoise2CellularGeneratorBase : public UFastNoise2GeneratorBase
-{
-	GENERATED_BODY()
-
-public:
-	UFUNCTION(BlueprintCallable, Category = "Fast Noise 2")
-	void SetJitterModifierSource(UFastNoise2GeneratorBase* InSource);
-
-	UFUNCTION(BlueprintSetter, Category = "Fast Noise 2")
-	void SetJitterModifierValue(float InValue);
-
-	UFUNCTION(BlueprintSetter, Category = "Fast Noise 2")
-	void SetDistanceFunction(EFastNoise2DistanceFunction InDistanceFunction);
-
-
-protected:
-	UPROPERTY(EditAnywhere, Category = "Fast Noise 2", BlueprintSetter = SetJitterModifierValue)
-	float JitterModifierValue = 1.0f;
-
-	UPROPERTY(EditAnywhere, Category = "Fast Noise 2", BlueprintSetter = SetDistanceFunction)
-	EFastNoise2DistanceFunction DistanceFunction;
-
-	FastNoise::SmartNode<FastNoise::Cellular> CellularGeneratorInst = nullptr;
-};
-
-//////////////////////////////////////////////////////////////////////////
-
-UCLASS(BlueprintType)
-class UNREALFASTNOISE2_API UFastNoise2CellularValueGenerator : public UFastNoise2CellularGeneratorBase
-{
-	GENERATED_BODY()
-
-public:
-	UFUNCTION(BlueprintSetter, Category = "Fast Noise 2")
-	void SetValueIndex(int32 InValueIndex);
-
-protected:
-	UPROPERTY(EditAnywhere, Category = "Fast Noise 2", BlueprintSetter = SetValueIndex, meta = (ClampMin = 0, ClampMax = 3))
-	int32 ValueIndex = 0;
-
-	virtual FastNoise::SmartNode<FastNoise::Generator> InitGenerator() override;
-
-	FastNoise::SmartNode<FastNoise::CellularValue> CellularValueGeneratorInst = nullptr;
-};
-
-//////////////////////////////////////////////////////////////////////////
-
-UCLASS(BlueprintType)
-class UNREALFASTNOISE2_API UFastNoise2CellularDistanceGenerator : public UFastNoise2CellularGeneratorBase
-{
-	GENERATED_BODY()
-
-public:
-	UFUNCTION(BlueprintSetter, Category = "Fast Noise 2")
-	void SetDistanceIndex0(int32 InDistanceIndex0);
-
-	UFUNCTION(BlueprintSetter, Category = "Fast Noise 2")
-	void SetDistanceIndex1(int32 InDistanceIndex1);
-
-	UFUNCTION(BlueprintSetter, Category = "Fast Noise 2")
-	void SetReturnType(EFastNoise2CellularDistanceReturnType InReturnType);
-
-protected:
-	UPROPERTY(EditAnywhere, Category = "Fast Noise 2", BlueprintSetter = SetDistanceIndex0, meta = (ClampMin = 0, ClampMax = 3))
-	int32 DistanceIndex0 = 0;
-
-	UPROPERTY(EditAnywhere, Category = "Fast Noise 2", BlueprintSetter = SetDistanceIndex1, meta = (ClampMin = 0, ClampMax = 3))
-	int32 DistanceIndex1 = 1;
-
-	UPROPERTY(EditAnywhere, Category = "Fast Noise 2", BlueprintSetter = SetReturnType)
-	EFastNoise2CellularDistanceReturnType ReturnType;
-
-	virtual FastNoise::SmartNode<FastNoise::Generator> InitGenerator() override;
-
-	FastNoise::SmartNode<FastNoise::CellularDistance> CellularDistanceGeneratorInst = nullptr;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -430,17 +272,11 @@ public:
 	UFUNCTION(BlueprintSetter, Category = "Fast Noise 2")
 	void SetWarpAmplitudeValue(float InValue);
 
-	UFUNCTION(BlueprintSetter, Category = "Fast Noise 2")
-	void SetWarpFrequencyValue(float InValue);
-
 	const FastNoise::SmartNode<FastNoise::DomainWarp>& GetDomainWarpGenerator() const { return DomainWarpGeneratorInst; }
 
 protected:
 	UPROPERTY(EditAnywhere, Category = "Fast Noise 2", BlueprintSetter = SetWarpAmplitudeValue)
 	float WarpAmplitude = 1.0f;
-
-	UPROPERTY(EditAnywhere, Category = "Fast Noise 2", BlueprintSetter = SetWarpFrequencyValue)
-	float WarpFrequency = 0.5f;
 
 	void InitDomainWarpBase(FastNoise::SmartNode<FastNoise::DomainWarp> InDomainWarpGeneratorInst);
 
@@ -892,47 +728,6 @@ protected:
 	virtual FastNoise::SmartNode<FastNoise::Generator> InitGenerator() override;
 
 	FastNoise::SmartNode<FastNoise::SeedOffset> SeedOffsetGeneratorInst = nullptr;
-};
-
-//////////////////////////////////////////////////////////////////////////
-
-UCLASS(BlueprintType)
-class UNREALFASTNOISE2_API UFastNoise2RemapGenerator : public UFastNoise2GeneratorBase
-{
-	GENERATED_BODY()
-
-public:
-	UFUNCTION(BlueprintSetter, Category = "Fast Noise 2")
-	void SetSource(UFastNoise2GeneratorBase* InSource);
-
-	UFUNCTION(BlueprintSetter, Category = "Fast Noise 2")
-	void SetRemapFromLowerBound(float InValue);
-
-	UFUNCTION(BlueprintSetter, Category = "Fast Noise 2")
-	void SetRemapFromUpperBound(float InValue);
-
-	UFUNCTION(BlueprintSetter, Category = "Fast Noise 2")
-	void SetRemapToLowerBound(float InValue);
-
-	UFUNCTION(BlueprintSetter, Category = "Fast Noise 2")
-	void SetRemapToUpperBound(float InValue);
-
-protected:
-	UPROPERTY(EditAnywhere, Category = "Fast Noise 2", BlueprintSetter = SetRemapFromLowerBound)
-	float FromLowerBound = -1.f;
-
-	UPROPERTY(EditAnywhere, Category = "Fast Noise 2", BlueprintSetter = SetRemapFromUpperBound)
-	float FromUpperBound = 1.f;
-
-	UPROPERTY(EditAnywhere, Category = "Fast Noise 2", BlueprintSetter = SetRemapToLowerBound)
-	float ToLowerBound = 0.f;
-
-	UPROPERTY(EditAnywhere, Category = "Fast Noise 2", BlueprintSetter = SetRemapToUpperBound)
-	float ToUpperBound = 1.f;
-
-	virtual FastNoise::SmartNode<FastNoise::Generator> InitGenerator() override;
-
-	FastNoise::SmartNode<FastNoise::Remap> RemapGeneratorInst = nullptr;
 };
 
 //////////////////////////////////////////////////////////////////////////

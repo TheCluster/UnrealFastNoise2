@@ -1,6 +1,6 @@
 #include "FastNoise2/FastNoise2Generators.h"
 #include "FastNoise/FastNoise.h"
-#include "FastSIMD/FastSIMD.h"
+#include "FastSIMD/Utility/FeatureEnums.h"
 
 void UFastNoise2GeneratorBase::PostInitProperties()
 {
@@ -16,7 +16,7 @@ FFloatRange UFastNoise2GeneratorBase::GenUniformGrid2D(TArray<float>& OutValues,
 {
 	check(GeneratorInst.get());
 	OutValues.SetNum(Size.X * Size.Y);
-	const FastNoise::OutputMinMax MinMax = GeneratorInst->GenUniformGrid2D(OutValues.GetData(), Start.X, Start.Y, Size.X, Size.Y, Frequency, Seed);
+	const FastNoise::OutputMinMax MinMax = GeneratorInst->GenUniformGrid2D(OutValues.GetData(), Start.X, Start.Y, Size.X, Size.Y, Frequency, Frequency, Seed);
 	return FFloatRange(MinMax.min, MinMax.max);
 }
 
@@ -24,7 +24,7 @@ FFloatRange UFastNoise2GeneratorBase::GenUniformGrid3D(TArray<float>& OutValues,
 {
 	check(GeneratorInst.get());
 	OutValues.SetNum(Size.X * Size.Y * Size.Z);
-	const FastNoise::OutputMinMax MinMax = GeneratorInst->GenUniformGrid3D(OutValues.GetData(), Start.X, Start.Y, Start.Z, Size.X, Size.Y, Size.Z, Frequency, Seed);
+	const FastNoise::OutputMinMax MinMax = GeneratorInst->GenUniformGrid3D(OutValues.GetData(), Start.X, Start.Y, Start.Z, Size.X, Size.Y, Size.Z, Frequency, Frequency, Frequency, Seed);
 	return FFloatRange(MinMax.min, MinMax.max);
 }
 
@@ -32,7 +32,7 @@ FFloatRange UFastNoise2GeneratorBase::GenUniformGrid4D(TArray<float>& OutValues,
 {
 	check(GeneratorInst.get());
 	OutValues.SetNum(Size.X * Size.Y * Size.Z * Size.W);
-	const FastNoise::OutputMinMax MinMax = GeneratorInst->GenUniformGrid4D(OutValues.GetData(), Start.X, Start.Y, Start.Z, Start.W, Size.X, Size.Y, Size.Z, Size.W, Frequency, Seed);
+	const FastNoise::OutputMinMax MinMax = GeneratorInst->GenUniformGrid4D(OutValues.GetData(), Start.X, Start.Y, Start.Z, Start.W, Size.X, Size.Y, Size.Z, Size.W, Frequency, Frequency, Frequency, Frequency, Seed);
 	return FFloatRange(MinMax.min, MinMax.max);
 }
 
@@ -40,7 +40,7 @@ FFloatRange UFastNoise2GeneratorBase::GenTileable2D(TArray<float>& OutValues, co
 {
 	check(GeneratorInst.get());
 	OutValues.SetNum(Size.X * Size.Y);
-	const FastNoise::OutputMinMax MinMax = GeneratorInst->GenTileable2D(OutValues.GetData(), Size.X, Size.Y, Frequency, Seed);
+	const FastNoise::OutputMinMax MinMax = GeneratorInst->GenTileable2D(OutValues.GetData(), Size.X, Size.Y, Frequency, Frequency, Seed);
 	return FFloatRange(MinMax.min, MinMax.max);
 }
 
@@ -195,22 +195,6 @@ FastNoise::SmartNode<FastNoise::Generator> UFastNoise2WhiteGenerator::InitGenera
 
 //////////////////////////////////////////////////////////////////////////
 
-void UFastNoise2CheckerboardGenerator::SetSize(float InSize)
-{
-	check(CheckerboardGeneratorInst.get());
-	Size = InSize;
-	CheckerboardGeneratorInst->SetSize(InSize);
-}
-
-FastNoise::SmartNode<FastNoise::Generator> UFastNoise2CheckerboardGenerator::InitGenerator()
-{
-	CheckerboardGeneratorInst = FastNoise::New<FastNoise::Checkerboard>();
-	SetSize(Size);
-	return CheckerboardGeneratorInst;
-}
-
-//////////////////////////////////////////////////////////////////////////
-
 void UFastNoise2SineWaveGenerator::SetScale(float InScale)
 {
 	check(SineWaveGeneratorInst.get());
@@ -223,71 +207,6 @@ FastNoise::SmartNode<FastNoise::Generator> UFastNoise2SineWaveGenerator::InitGen
 	SineWaveGeneratorInst = FastNoise::New<FastNoise::SineWave>();
 	SetScale(Scale);
 	return SineWaveGeneratorInst;
-}
-
-//////////////////////////////////////////////////////////////////////////
-
-void UFastNoise2PositionOutputGenerator::SetData(const FVector4& InMultipliers, const FVector4& InOffsets)
-{
-	check(PositionOutputGeneratorInst.get());
-	Offsets = InOffsets;
-	PositionOutputGeneratorInst->Set<FastNoise::Dim::X>(InMultipliers.X, InOffsets.X);
-	PositionOutputGeneratorInst->Set<FastNoise::Dim::Y>(InMultipliers.Y, InOffsets.Y);
-	PositionOutputGeneratorInst->Set<FastNoise::Dim::Z>(InMultipliers.Z, InOffsets.Z);
-	PositionOutputGeneratorInst->Set<FastNoise::Dim::W>(InMultipliers.W, InOffsets.W);
-}
-
-void UFastNoise2PositionOutputGenerator::SetMultipliers(const FVector4& InMultipliers)
-{
-	SetData(InMultipliers, Offsets);
-}
-
-void UFastNoise2PositionOutputGenerator::SetOffsets(const FVector4& InOffsets)
-{
-	SetData(Multipliers, InOffsets);
-}
-
-FastNoise::SmartNode<FastNoise::Generator> UFastNoise2PositionOutputGenerator::InitGenerator()
-{
-	PositionOutputGeneratorInst = FastNoise::New<FastNoise::PositionOutput>();
-	SetData(Multipliers, Offsets);
-	return PositionOutputGeneratorInst;
-}
-
-//////////////////////////////////////////////////////////////////////////
-
-void UFastNoise2DistanceToPointGenerator::SetSource(UFastNoise2GeneratorBase* InSource)
-{
-	if (InSource != nullptr)
-	{
-		check(DistanceToPointGeneratorInst.get());
-		DistanceToPointGeneratorInst->SetSource(InSource->GetGenerator());
-	}
-}
-
-void UFastNoise2DistanceToPointGenerator::SetDistanceFunction(EFastNoise2DistanceFunction InDistanceFunction)
-{
-	check(DistanceToPointGeneratorInst.get());
-	DistanceFunction = InDistanceFunction;
-	DistanceToPointGeneratorInst->SetDistanceFunction(FFastNoise2Helpers::ConvertUnrealToFastNoiseDistanceFunction(InDistanceFunction));
-}
-
-void UFastNoise2DistanceToPointGenerator::SetScale(const FVector4& InScale)
-{
-	check(DistanceToPointGeneratorInst.get());
-	Scale = InScale;
-	DistanceToPointGeneratorInst->SetScale<FastNoise::Dim::X>(InScale.X);
-	DistanceToPointGeneratorInst->SetScale<FastNoise::Dim::Y>(InScale.Y);
-	DistanceToPointGeneratorInst->SetScale<FastNoise::Dim::Z>(InScale.Z);
-	DistanceToPointGeneratorInst->SetScale<FastNoise::Dim::W>(InScale.W);
-}
-
-FastNoise::SmartNode<FastNoise::Generator> UFastNoise2DistanceToPointGenerator::InitGenerator()
-{
-	DistanceToPointGeneratorInst = FastNoise::New<FastNoise::DistanceToPoint>();
-	SetDistanceFunction(DistanceFunction);
-	SetScale(Scale);
-	return DistanceToPointGeneratorInst;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -312,128 +231,6 @@ FastNoise::SmartNode<FastNoise::Generator> UFastNoise2SimplexGenerator::InitGene
 {
 	SimplexGeneratorInst = FastNoise::New<FastNoise::Simplex>();
 	return SimplexGeneratorInst;
-}
-
-//////////////////////////////////////////////////////////////////////////
-
-FastNoise::SmartNode<FastNoise::Generator> UFastNoise2OpenSimplex2Generator::InitGenerator()
-{
-	OpenSimplex2GeneratorInst = FastNoise::New<FastNoise::OpenSimplex2>();
-	return OpenSimplex2GeneratorInst;
-}
-
-//////////////////////////////////////////////////////////////////////////
-
-FastNoise::SmartNode<FastNoise::Generator> UFastNoise2OpenSimplex2SGenerator::InitGenerator()
-{
-	OpenSimplex2SGeneratorInst = FastNoise::New<FastNoise::OpenSimplex2S>();
-	return OpenSimplex2SGeneratorInst;
-}
-
-//////////////////////////////////////////////////////////////////////////
-
-void UFastNoise2CellularGeneratorBase::SetJitterModifierSource(UFastNoise2GeneratorBase* InSource)
-{
-	if (InSource != nullptr)
-	{
-		check(CellularGeneratorInst.get());
-		CellularGeneratorInst->SetJitterModifier(InSource->GetGenerator());
-	}
-}
-
-void UFastNoise2CellularGeneratorBase::SetJitterModifierValue(float InValue)
-{
-	check(CellularGeneratorInst.get());
-	JitterModifierValue = InValue;
-	CellularGeneratorInst->SetJitterModifier(InValue);
-}
-
-void UFastNoise2CellularGeneratorBase::SetDistanceFunction(EFastNoise2DistanceFunction InDistanceFunction)
-{
-	check(CellularGeneratorInst.get());
-	DistanceFunction = InDistanceFunction;
-	CellularGeneratorInst->SetDistanceFunction(FFastNoise2Helpers::ConvertUnrealToFastNoiseDistanceFunction(InDistanceFunction));
-}
-
-//////////////////////////////////////////////////////////////////////////
-
-void UFastNoise2CellularValueGenerator::SetValueIndex(int32 InValueIndex)
-{
-	check(CellularValueGeneratorInst.get());
-	ValueIndex = InValueIndex;
-	CellularValueGeneratorInst->SetValueIndex(InValueIndex);
-}
-
-FastNoise::SmartNode<FastNoise::Generator> UFastNoise2CellularValueGenerator::InitGenerator()
-{
-	CellularValueGeneratorInst = FastNoise::New<FastNoise::CellularValue>();
-	CellularGeneratorInst = CellularValueGeneratorInst;
-	SetDistanceFunction(DistanceFunction);
-	SetJitterModifierValue(JitterModifierValue);
-	SetValueIndex(ValueIndex);
-	return CellularValueGeneratorInst;
-}
-
-//////////////////////////////////////////////////////////////////////////
-
-void UFastNoise2CellularDistanceGenerator::SetDistanceIndex0(int32 InDistanceIndex0)
-{
-	check(CellularDistanceGeneratorInst.get());
-	DistanceIndex0 = InDistanceIndex0;
-	CellularDistanceGeneratorInst->SetDistanceIndex0(InDistanceIndex0);
-}
-
-void UFastNoise2CellularDistanceGenerator::SetDistanceIndex1(int32 InDistanceIndex1)
-{
-	check(CellularDistanceGeneratorInst.get());
-	DistanceIndex1 = InDistanceIndex1;
-	CellularDistanceGeneratorInst->SetDistanceIndex1(InDistanceIndex1);
-}
-
-void UFastNoise2CellularDistanceGenerator::SetReturnType(EFastNoise2CellularDistanceReturnType InReturnType)
-{
-	check(CellularDistanceGeneratorInst.get());
-	ReturnType = InReturnType;
-	CellularDistanceGeneratorInst->SetReturnType(FFastNoise2Helpers::ConvertUnrealToFastNoiseCellularDistanceReturnType(InReturnType));
-}
-
-FastNoise::SmartNode<FastNoise::Generator> UFastNoise2CellularDistanceGenerator::InitGenerator()
-{
-	CellularDistanceGeneratorInst = FastNoise::New<FastNoise::CellularDistance>();
-	CellularGeneratorInst = CellularDistanceGeneratorInst;
-	SetDistanceFunction(DistanceFunction);
-	SetJitterModifierValue(JitterModifierValue);
-	SetDistanceIndex0(DistanceIndex0);
-	SetDistanceIndex1(DistanceIndex1);
-	return CellularDistanceGeneratorInst;
-}
-
-//////////////////////////////////////////////////////////////////////////
-
-void UFastNoise2CellularLookupGenerator::SetLookupSource(UFastNoise2GeneratorBase* InSource)
-{
-	if (InSource != nullptr)
-	{
-		check(CellularLookupGeneratorInst.get());
-		CellularLookupGeneratorInst->SetLookup(InSource->GetGenerator());
-	}
-}
-
-void UFastNoise2CellularLookupGenerator::SetLookupFrequency(float InLookupFrequency)
-{
-	check(CellularLookupGeneratorInst.get());
-	LookupFrequency = InLookupFrequency;
-	CellularLookupGeneratorInst->SetLookupFrequency(InLookupFrequency);
-}
-
-FastNoise::SmartNode<FastNoise::Generator> UFastNoise2CellularLookupGenerator::InitGenerator()
-{
-	CellularLookupGeneratorInst = FastNoise::New<FastNoise::CellularLookup>();
-	CellularGeneratorInst = CellularLookupGeneratorInst;
-	SetDistanceFunction(DistanceFunction);
-	SetJitterModifierValue(JitterModifierValue);
-	SetLookupFrequency(LookupFrequency);
-	return CellularLookupGeneratorInst;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -522,32 +319,6 @@ FastNoise::SmartNode<FastNoise::Generator> UFastNoise2FractalRidgedGenerator::In
 
 //////////////////////////////////////////////////////////////////////////
 
-void UFastNoise2FractalPingPongGenerator::SetPingPongStrengthSource(UFastNoise2GeneratorBase* InSource)
-{
-	if (InSource != nullptr)
-	{
-		check(FractalPingPongGeneratorInst.get());
-		FractalPingPongGeneratorInst->SetPingPongStrength(InSource->GetGenerator());
-	}
-}
-
-void UFastNoise2FractalPingPongGenerator::SetPingPongStrengthValue(float InPingPongStrength)
-{
-	check(FractalPingPongGeneratorInst.get());
-	PingPongStrength = InPingPongStrength;
-	FractalPingPongGeneratorInst->SetPingPongStrength(InPingPongStrength);
-}
-
-FastNoise::SmartNode<FastNoise::Generator> UFastNoise2FractalPingPongGenerator::InitGenerator()
-{
-	FractalPingPongGeneratorInst = FastNoise::New<FastNoise::FractalPingPong>();
-	InitFractalBase(FractalPingPongGeneratorInst);
-	SetPingPongStrengthValue(PingPongStrength);
-	return FractalPingPongGeneratorInst;
-}
-
-//////////////////////////////////////////////////////////////////////////
-
 void UFastNoise2DomainWarpGeneratorBase::SetSource(UFastNoise2GeneratorBase* InSource)
 {
 	if (InSource != nullptr)
@@ -573,18 +344,10 @@ void UFastNoise2DomainWarpGeneratorBase::SetWarpAmplitudeValue(float InValue)
 	DomainWarpGeneratorInst->SetWarpAmplitude(InValue);
 }
 
-void UFastNoise2DomainWarpGeneratorBase::SetWarpFrequencyValue(float InValue)
-{
-	check(DomainWarpGeneratorInst.get());
-	WarpFrequency = InValue;
-	DomainWarpGeneratorInst->SetWarpFrequency(InValue);
-}
-
 void UFastNoise2DomainWarpGeneratorBase::InitDomainWarpBase(FastNoise::SmartNode<FastNoise::DomainWarp> InDomainWarpGeneratorInst)
 {
 	DomainWarpGeneratorInst = InDomainWarpGeneratorInst;
 	SetWarpAmplitudeValue(WarpAmplitude);
-	SetWarpFrequencyValue(WarpFrequency);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -675,7 +438,7 @@ FastNoise::SmartNode<FastNoise::Generator> UFastNoise2DomainWarpFractalProgressi
 
 FastNoise::SmartNode<FastNoise::Generator> UFastNoise2DomainWarpFractalIndependantGenerator::InitGenerator()
 {
-	DomainWarpFractalIndependantGeneratorInst = FastNoise::New<FastNoise::DomainWarpFractalIndependant>();
+	DomainWarpFractalIndependantGeneratorInst = FastNoise::New<FastNoise::DomainWarpFractalIndependent>();
 	InitFractalDomainWarpBase(DomainWarpFractalIndependantGeneratorInst);
 	return DomainWarpFractalIndependantGeneratorInst;
 }
@@ -986,7 +749,7 @@ void UFastNoise2DomainScaleGenerator::SetScale(float InValue)
 {
 	check(DomainScaleGeneratorInst.get());
 	Scale = InValue;
-	DomainScaleGeneratorInst->SetScale(InValue);
+	DomainScaleGeneratorInst->SetScaling(InValue);
 }
 
 FastNoise::SmartNode<FastNoise::Generator> UFastNoise2DomainScaleGenerator::InitGenerator()
@@ -1102,55 +865,6 @@ FastNoise::SmartNode<FastNoise::Generator> UFastNoise2SeedOffsetGenerator::InitG
 
 //////////////////////////////////////////////////////////////////////////
 
-void UFastNoise2RemapGenerator::SetSource(UFastNoise2GeneratorBase* InSource)
-{
-	if (InSource != nullptr)
-	{
-		check(RemapGeneratorInst.get());
-		RemapGeneratorInst->SetSource(InSource->GetGenerator());
-	}
-}
-
-void UFastNoise2RemapGenerator::SetRemapFromLowerBound(float InValue)
-{
-	check(RemapGeneratorInst.get());
-	FromLowerBound = InValue;
-	RemapGeneratorInst->SetRemap(InValue, FromUpperBound, ToLowerBound, ToUpperBound);
-}
-
-void UFastNoise2RemapGenerator::SetRemapFromUpperBound(float InValue)
-{
-	check(RemapGeneratorInst.get());
-	FromUpperBound = InValue;
-	RemapGeneratorInst->SetRemap(FromLowerBound, InValue, ToLowerBound, ToUpperBound);
-}
-
-void UFastNoise2RemapGenerator::SetRemapToLowerBound(float InValue)
-{
-	check(RemapGeneratorInst.get());
-	ToLowerBound = InValue;
-	RemapGeneratorInst->SetRemap(FromLowerBound, FromUpperBound, InValue, ToUpperBound);
-}
-
-void UFastNoise2RemapGenerator::SetRemapToUpperBound(float InValue)
-{
-	check(RemapGeneratorInst.get());
-	ToUpperBound = InValue;
-	RemapGeneratorInst->SetRemap(FromLowerBound, FromUpperBound, ToLowerBound, InValue);
-}
-
-FastNoise::SmartNode<FastNoise::Generator> UFastNoise2RemapGenerator::InitGenerator()
-{
-	RemapGeneratorInst = FastNoise::New<FastNoise::Remap>();
-	SetRemapFromLowerBound(FromLowerBound);
-	SetRemapFromUpperBound(FromUpperBound);
-	SetRemapToLowerBound(ToLowerBound);
-	SetRemapToUpperBound(ToUpperBound);
-	return RemapGeneratorInst;
-}
-
-//////////////////////////////////////////////////////////////////////////
-
 void UFastNoise2ConvertRGBA8Generator::SetSource(UFastNoise2GeneratorBase* InSource)
 {
 	if (InSource != nullptr)
@@ -1197,7 +911,7 @@ void UFastNoise2TerraceGenerator::SetMultiplier(float InValue)
 {
 	check(TerraceGeneratorInst.get());
 	Multiplier = InValue;
-	TerraceGeneratorInst->SetMultiplier(InValue);
+	TerraceGeneratorInst->SetStepCount(InValue);
 }
 
 void UFastNoise2TerraceGenerator::SetSmoothness(float InValue)
@@ -1230,10 +944,10 @@ void UFastNoise2DomainAxisScaleGenerator::SetScale(const FVector4& InValue)
 {
 	check(DomainAxisScaleGeneratorInst.get());
 	Scale = InValue;
-	DomainAxisScaleGeneratorInst->SetScale<FastNoise::Dim::X>(InValue.X);
-	DomainAxisScaleGeneratorInst->SetScale<FastNoise::Dim::Y>(InValue.Y);
-	DomainAxisScaleGeneratorInst->SetScale<FastNoise::Dim::Z>(InValue.Z);
-	DomainAxisScaleGeneratorInst->SetScale<FastNoise::Dim::W>(InValue.W);
+	DomainAxisScaleGeneratorInst->SetScaling<FastNoise::Dim::X>(InValue.X);
+	DomainAxisScaleGeneratorInst->SetScaling<FastNoise::Dim::Y>(InValue.Y);
+	DomainAxisScaleGeneratorInst->SetScaling<FastNoise::Dim::Z>(InValue.Z);
+	DomainAxisScaleGeneratorInst->SetScaling<FastNoise::Dim::W>(InValue.W);
 }
 
 FastNoise::SmartNode<FastNoise::Generator> UFastNoise2DomainAxisScaleGenerator::InitGenerator()

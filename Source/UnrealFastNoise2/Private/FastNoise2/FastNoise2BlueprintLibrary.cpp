@@ -20,32 +20,9 @@ UFastNoise2WhiteGenerator* UFastNoise2BlueprintLibrary::MakeWhiteGenerator()
 	return NewObject<UFastNoise2WhiteGenerator>();
 }
 
-UFastNoise2CheckerboardGenerator* UFastNoise2BlueprintLibrary::MakeCheckerboardGenerator(float Size)
-{
-	UFastNoise2CheckerboardGenerator* Gen = NewObject<UFastNoise2CheckerboardGenerator>();
-	Gen->SetSize(Size);
-	return Gen;
-}
-
 UFastNoise2SineWaveGenerator* UFastNoise2BlueprintLibrary::MakeSineWaveGenerator(float Scale)
 {
 	UFastNoise2SineWaveGenerator* Gen = NewObject<UFastNoise2SineWaveGenerator>();
-	Gen->SetScale(Scale);
-	return Gen;
-}
-
-UFastNoise2PositionOutputGenerator* UFastNoise2BlueprintLibrary::MakePositionOutputGenerator(FVector4 Multiplier, FVector4 Offsets)
-{
-	UFastNoise2PositionOutputGenerator* Gen = NewObject<UFastNoise2PositionOutputGenerator>();
-	Gen->SetData(Multiplier, Offsets);
-	return Gen;
-}
-
-UFastNoise2DistanceToPointGenerator* UFastNoise2BlueprintLibrary::MakeDistanceToPointGenerator(UFastNoise2GeneratorBase* Source, EFastNoise2DistanceFunction DistanceFunction, FVector4 Scale)
-{
-	UFastNoise2DistanceToPointGenerator* Gen = NewObject<UFastNoise2DistanceToPointGenerator>();
-	Gen->SetSource(Source);
-	Gen->SetDistanceFunction(DistanceFunction);
 	Gen->SetScale(Scale);
 	return Gen;
 }
@@ -63,40 +40,6 @@ UFastNoise2PerlinGenerator* UFastNoise2BlueprintLibrary::MakePerlinGenerator()
 UFastNoise2SimplexGenerator* UFastNoise2BlueprintLibrary::MakeSimplexGenerator()
 {
 	return NewObject<UFastNoise2SimplexGenerator>();
-}
-
-UFastNoise2CellularValueGenerator* UFastNoise2BlueprintLibrary::MakeCellularValueGenerator(UFastNoise2GeneratorBase* JitterModifierSource, float JitterModifierValue, EFastNoise2DistanceFunction DistanceFunction, int32 ValueIndex)
-{
-	UFastNoise2CellularValueGenerator* Gen = NewObject<UFastNoise2CellularValueGenerator>();
-	if (JitterModifierSource != nullptr)
-	{
-		Gen->SetJitterModifierSource(JitterModifierSource);
-	}
-	else
-	{
-		Gen->SetJitterModifierValue(JitterModifierValue);
-	}
-	Gen->SetDistanceFunction(DistanceFunction);
-	Gen->SetValueIndex(ValueIndex);
-	return Gen;
-}
-
-UFastNoise2CellularDistanceGenerator* UFastNoise2BlueprintLibrary::MakeCellularDistanceGenerator(UFastNoise2GeneratorBase* JitterModifierSource, float JitterModifierValue, EFastNoise2DistanceFunction DistanceFunction, int32 DistanceIndex0, int32 DistanceIndex1, EFastNoise2CellularDistanceReturnType ReturnType)
-{
-	UFastNoise2CellularDistanceGenerator* Gen = NewObject<UFastNoise2CellularDistanceGenerator>();
-	if (JitterModifierSource != nullptr)
-	{
-		Gen->SetJitterModifierSource(JitterModifierSource);
-	}
-	else
-	{
-		Gen->SetJitterModifierValue(JitterModifierValue);
-	}
-	Gen->SetDistanceFunction(DistanceFunction);
-	Gen->SetDistanceIndex0(DistanceIndex0);
-	Gen->SetDistanceIndex1(DistanceIndex1);
-	Gen->SetReturnType(ReturnType);
-	return Gen;
 }
 
 UFastNoise2FractalFBmGenerator* UFastNoise2BlueprintLibrary::MakeFractalFBmGenerator(UFastNoise2GeneratorBase* Source, UFastNoise2GeneratorBase* GainSource /*= nullptr*/, float Gain /*= 0.5f*/, UFastNoise2GeneratorBase* WeightedStrengthSource /*= nullptr*/, float WeightedStrength /*= 0.f*/, float Lacunarity /*= 2.0f*/, int32 Octaves /*= 3 */)
@@ -149,7 +92,7 @@ UFastNoise2FractalRidgedGenerator* UFastNoise2BlueprintLibrary::MakeFractalRidge
 	return Gen;
 }
 
-UFastNoise2DomainWarpGradientGenerator* UFastNoise2BlueprintLibrary::MakeDomainWarpGradientGenerator(UFastNoise2GeneratorBase* Source, UFastNoise2GeneratorBase* WarpAmplitudeSource /*= nullptr*/, float WarpAmplitude /*= 1.0f*/, float WarpFrequency /*= 0.5f*/)
+UFastNoise2DomainWarpGradientGenerator* UFastNoise2BlueprintLibrary::MakeDomainWarpGradientGenerator(UFastNoise2GeneratorBase* Source, UFastNoise2GeneratorBase* WarpAmplitudeSource /*= nullptr*/, float WarpAmplitude /*= 1.0f*/)
 {
 	UFastNoise2DomainWarpGradientGenerator* Gen = NewObject<UFastNoise2DomainWarpGradientGenerator>();
 	Gen->SetSource(Source);
@@ -161,7 +104,6 @@ UFastNoise2DomainWarpGradientGenerator* UFastNoise2BlueprintLibrary::MakeDomainW
 	{
 		Gen->SetWarpAmplitudeValue(WarpAmplitude);
 	}
-	Gen->SetWarpFrequencyValue(WarpFrequency);
 	return Gen;
 }
 
@@ -494,17 +436,6 @@ UFastNoise2SeedOffsetGenerator* UFastNoise2BlueprintLibrary::SeedOffset(UFastNoi
 	UFastNoise2SeedOffsetGenerator* Gen = NewObject<UFastNoise2SeedOffsetGenerator>();
 	Gen->SetSource(Source);
 	Gen->SetOffset(Offset);
-	return Gen;
-}
-
-UFastNoise2RemapGenerator* UFastNoise2BlueprintLibrary::Remap(UFastNoise2GeneratorBase* Source /*= nullptr*/, FVector2D FromRange /*= FVector2D(-1.f, 1.f)*/, FVector2D ToRange /*= FVector2D(0.f, 1.f)*/)
-{
-	UFastNoise2RemapGenerator* Gen = NewObject<UFastNoise2RemapGenerator>();
-	Gen->SetSource(Source);
-	Gen->SetRemapFromLowerBound(FromRange.X);
-	Gen->SetRemapFromUpperBound(FromRange.Y);
-	Gen->SetRemapToLowerBound(ToRange.X);
-	Gen->SetRemapToUpperBound(ToRange.Y);
 	return Gen;
 }
 

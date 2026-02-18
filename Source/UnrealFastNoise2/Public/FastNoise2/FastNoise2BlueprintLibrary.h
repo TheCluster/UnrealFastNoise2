@@ -22,16 +22,7 @@ public:
 	static UFastNoise2WhiteGenerator* MakeWhiteGenerator();
 
 	UFUNCTION(BlueprintCallable, Category = "Fast Noise 2|Basic Generators")
-	static UFastNoise2CheckerboardGenerator* MakeCheckerboardGenerator(float Size);
-
-	UFUNCTION(BlueprintCallable, Category = "Fast Noise 2|Basic Generators")
 	static UFastNoise2SineWaveGenerator* MakeSineWaveGenerator(float Scale);
-
-	UFUNCTION(BlueprintCallable, Category = "Fast Noise 2|Basic Generators")
-	static UFastNoise2PositionOutputGenerator* MakePositionOutputGenerator(FVector4 Multiplier, FVector4 Offsets);
-
-	UFUNCTION(BlueprintCallable, Category = "Fast Noise 2|Basic Generators")
-	static UFastNoise2DistanceToPointGenerator* MakeDistanceToPointGenerator(UFastNoise2GeneratorBase* Source, EFastNoise2DistanceFunction DistanceFunction, FVector4 Scale);
 
 	UFUNCTION(BlueprintCallable, Category = "Fast Noise 2|Coherent Noise")
 	static UFastNoise2ValueGenerator* MakeValueGenerator();
@@ -41,21 +32,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Fast Noise 2|Coherent Noise")
 	static UFastNoise2SimplexGenerator* MakeSimplexGenerator();
-
-	UFUNCTION(BlueprintCallable, Category = "Fast Noise 2|Coherent Noise")
-	static UFastNoise2CellularValueGenerator* MakeCellularValueGenerator(
-		UFastNoise2GeneratorBase* JitterModifierSource
-		, float JitterModifierValue = 1.0f
-		, EFastNoise2DistanceFunction DistanceFunction = EFastNoise2DistanceFunction::Euclidean, int32 ValueIndex = 0);
-
-	UFUNCTION(BlueprintCallable, Category = "Fast Noise 2|Coherent Noise")
-	static UFastNoise2CellularDistanceGenerator* MakeCellularDistanceGenerator(
-		UFastNoise2GeneratorBase* JitterModifierSource
-		, float JitterModifierValue = 1.0f
-		, EFastNoise2DistanceFunction DistanceFunction = EFastNoise2DistanceFunction::Euclidean
-		, int32 DistanceIndex0 = 0
-		, int32 DistanceIndex1 = 1
-		, EFastNoise2CellularDistanceReturnType ReturnType = EFastNoise2CellularDistanceReturnType::Index0);
 
 	UFUNCTION(BlueprintCallable, Category = "Fast Noise 2|Fractal")
 	static UFastNoise2FractalFBmGenerator* MakeFractalFBmGenerator(
@@ -82,8 +58,7 @@ public:
 	static UFastNoise2DomainWarpGradientGenerator* MakeDomainWarpGradientGenerator(
 		UFastNoise2GeneratorBase* Source,
 		UFastNoise2GeneratorBase* WarpAmplitudeSource = nullptr,
-		float WarpAmplitude = 1.0f,
-		float WarpFrequency = 0.5f);
+		float WarpAmplitude = 1.0f);
 
 	UFUNCTION(BlueprintCallable, Category = "Fast Noise 2|Fractal|Domain Warp")
 	static UFastNoise2DomainWarpFractalProgressiveGenerator* MakeDomainWarpFractalProgressiveGenerator(
@@ -206,9 +181,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Fast Noise 2|Modifiers")
 	static UFastNoise2SeedOffsetGenerator* SeedOffset(UFastNoise2GeneratorBase* Source = nullptr, int32 Offset = 1);
-
-	UFUNCTION(BlueprintCallable, Category = "Fast Noise 2|Modifiers")
-	static UFastNoise2RemapGenerator* Remap(UFastNoise2GeneratorBase* Source = nullptr, FVector2D FromRange = FVector2D(-1.f, 1.f), FVector2D ToRange = FVector2D(0.f, 1.f));
 
 	UFUNCTION(BlueprintCallable, Category = "Fast Noise 2|Modifiers")
 	static UFastNoise2ConvertRGBA8Generator* ConvertRGBA8(UFastNoise2GeneratorBase* Source = nullptr, FVector2D Range = FVector2D(-1.f, 1.f));
