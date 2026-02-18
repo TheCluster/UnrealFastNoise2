@@ -1,5 +1,3 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #include "UnrealFastNoise2.h"
 
 void FUnrealFastNoise2Module::StartupModule()
