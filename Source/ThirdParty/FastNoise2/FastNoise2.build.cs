@@ -10,15 +10,9 @@ public class FastNoise2 : ModuleRules
 		Type = ModuleType.External;
 		PublicIncludePaths.Add(Path.Combine(ModuleDirectory, "include"));
 
-		PublicAdditionalLibraries.Add(LibraryPath);
+		PublicAdditionalLibraries.Add(StaticLibraryPath);
 
-		// Delay-load the library, so we can load it from the right place first
-		PublicDelayLoadDLLs.Add(LibraryName + RuntimeLibExtension);
-
-		// Ensure that the library is staged along with the executable
-		RuntimeDependencies.Add(RuntimePath);
-
-		PublicDefinitions.Add("FASTNOISE_LIBRARY_PATH=\"" + RelativeRuntimePath.Replace("\\", "\\\\") + "\"");
+		//PublicDefinitions.Add("FASTNOISE_LIBRARY_PATH=\"" + RelativeRuntimePath.Replace("\\", "\\\\") + "\"");
 	}
 
 	private string ConfigName
@@ -37,34 +31,31 @@ public class FastNoise2 : ModuleRules
 		}
 	}
 
-	private string RuntimePath
+	private string StaticLibraryPath
 	{
 		get
 		{
-			return Path.Combine("$(PluginDir)", RelativeRuntimePath);
-		}
-	}
-
-	private string RelativeRuntimePath
-	{
-		get
-		{
-			return Path.Combine("Binaries", "ThirdParty", "FastNoise2", PlatformString, LibraryName + RuntimeLibExtension);
-		}
-	}
-
-	private string LibraryPath
-	{
-		get
-		{
-			if (Target.Platform.IsInGroup(UnrealPlatformGroup.Microsoft))
+			if (Target.Platform == UnrealTargetPlatform.IOS || Target.Platform == UnrealTargetPlatform.Android || Target.Platform.IsInGroup(UnrealPlatformGroup.Microsoft))
 			{
-				return Path.Combine(ModuleDirectory, PlatformString, ConfigName, LibraryName + LibraryExtension);
+				return Path.Combine("$(PluginDir)", "Binaries", "ThirdParty", "FastNoise2", PlatformString, ConfigName, LibraryName + StaticLibraryExtension);
 			}
-			else
+
+			if (Target.Platform == UnrealTargetPlatform.Mac)
 			{
-				return RuntimePath;
+				return Path.Combine("$(PluginDir)", "Binaries", "ThirdParty", "FastNoise2", PlatformString, "AppleSilicon", ConfigName, LibraryName + StaticLibraryExtension);
 			}
+
+			if (Target.Platform == UnrealTargetPlatform.LinuxArm64)
+			{
+				return Path.Combine("$(PluginDir)", "Binaries", "ThirdParty", "FastNoise2", PlatformString, "Arm", ConfigName, LibraryName + StaticLibraryExtension);
+			}
+
+			if (Target.Platform == UnrealTargetPlatform.Linux)
+			{
+				return Path.Combine("$(PluginDir)", "Binaries", "ThirdParty", "FastNoise2", PlatformString, "x64", ConfigName, LibraryName + StaticLibraryExtension);
+			}
+			
+			throw new BuildException("Unsupported platform");
 		}
 	}
 
@@ -82,7 +73,7 @@ public class FastNoise2 : ModuleRules
 				{
 					return "libFastNoiseD";
 				}
-				else if (Target.Platform.IsInGroup(UnrealPlatformGroup.Microsoft))
+				if (Target.Platform.IsInGroup(UnrealPlatformGroup.Microsoft))
 				{
 					return "FastNoiseD";
 				}
@@ -98,7 +89,7 @@ public class FastNoise2 : ModuleRules
 				{
 					return "libFastNoise";
 				}
-				else if (Target.Platform.IsInGroup(UnrealPlatformGroup.Microsoft))
+				if (Target.Platform.IsInGroup(UnrealPlatformGroup.Microsoft))
 				{
 					return "FastNoise";
 				}
@@ -108,45 +99,16 @@ public class FastNoise2 : ModuleRules
 		}
 	}
 
-	private string LibraryExtension
-	{
-		get
-		{
-			if (Target.Platform.IsInGroup(UnrealPlatformGroup.Microsoft))
-			{
-				return ".lib";
-			}
-			else
-			{
-				return RuntimeLibExtension;
-			}
-		}
-	}
-
-	private string RuntimeLibExtension
+	private string StaticLibraryExtension
 	{
 		get
 		{
 			if (Target.Platform == UnrealTargetPlatform.Mac)
 			{
-				return ".dylib";
-			}
-			else if (Target.Platform == UnrealTargetPlatform.IOS)
-			{
-				return ".framework";
-			}
-			else if (Target.Platform == UnrealTargetPlatform.Android ||
-			         Target.Platform == UnrealTargetPlatform.Linux ||
-			         Target.Platform == UnrealTargetPlatform.LinuxArm64)
-			{
-				return ".so";
-			}
-			else if (Target.Platform.IsInGroup(UnrealPlatformGroup.Microsoft))
-			{
-				return ".dll";
+				return ".a";
 			}
 
-			throw new BuildException("Unsupported platform");
+			return ".lib";
 		}
 	}
 }
