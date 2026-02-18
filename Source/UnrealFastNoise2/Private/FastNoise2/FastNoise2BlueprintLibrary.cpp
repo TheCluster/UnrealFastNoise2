@@ -65,16 +65,6 @@ UFastNoise2SimplexGenerator* UFastNoise2BlueprintLibrary::MakeSimplexGenerator()
 	return NewObject<UFastNoise2SimplexGenerator>();
 }
 
-UFastNoise2OpenSimplex2Generator* UFastNoise2BlueprintLibrary::MakeOpenSimplex2Generator()
-{
-	return NewObject<UFastNoise2OpenSimplex2Generator>();
-}
-
-UFastNoise2OpenSimplex2SGenerator* UFastNoise2BlueprintLibrary::MakeOpenSimplex2SGenerator()
-{
-	return NewObject<UFastNoise2OpenSimplex2SGenerator>();
-}
-
 UFastNoise2CellularValueGenerator* UFastNoise2BlueprintLibrary::MakeCellularValueGenerator(UFastNoise2GeneratorBase* JitterModifierSource, float JitterModifierValue, EFastNoise2DistanceFunction DistanceFunction, int32 ValueIndex)
 {
 	UFastNoise2CellularValueGenerator* Gen = NewObject<UFastNoise2CellularValueGenerator>();
@@ -109,23 +99,6 @@ UFastNoise2CellularDistanceGenerator* UFastNoise2BlueprintLibrary::MakeCellularD
 	return Gen;
 }
 
-UFastNoise2CellularLookupGenerator* UFastNoise2BlueprintLibrary::MakeCellularLookupGenerator(UFastNoise2GeneratorBase* JitterModifierSource, float JitterModifierValue, EFastNoise2DistanceFunction DistanceFunction, UFastNoise2GeneratorBase* LookupSource, float LookupFrequency)
-{
-	UFastNoise2CellularLookupGenerator* Gen = NewObject<UFastNoise2CellularLookupGenerator>();
-	if (JitterModifierSource != nullptr)
-	{
-		Gen->SetJitterModifierSource(JitterModifierSource);
-	}
-	else
-	{
-		Gen->SetJitterModifierValue(JitterModifierValue);
-	}
-	Gen->SetDistanceFunction(DistanceFunction);
-	Gen->SetLookupSource(JitterModifierSource);
-	Gen->SetLookupFrequency(LookupFrequency);
-	return Gen;
-}
-
 UFastNoise2FractalFBmGenerator* UFastNoise2BlueprintLibrary::MakeFractalFBmGenerator(UFastNoise2GeneratorBase* Source, UFastNoise2GeneratorBase* GainSource /*= nullptr*/, float Gain /*= 0.5f*/, UFastNoise2GeneratorBase* WeightedStrengthSource /*= nullptr*/, float WeightedStrength /*= 0.f*/, float Lacunarity /*= 2.0f*/, int32 Octaves /*= 3 */)
 {
 	UFastNoise2FractalFBmGenerator* Gen = NewObject<UFastNoise2FractalFBmGenerator>();
@@ -155,39 +128,6 @@ UFastNoise2FractalRidgedGenerator* UFastNoise2BlueprintLibrary::MakeFractalRidge
 {
 	UFastNoise2FractalRidgedGenerator* Gen = NewObject<UFastNoise2FractalRidgedGenerator>();
 	Gen->SetSource(Source);
-	if (GainSource != nullptr)
-	{
-		Gen->SetGainSource(GainSource);
-	}
-	else
-	{
-		Gen->SetGainValue(Gain);
-	}
-	if (WeightedStrengthSource != nullptr)
-	{
-		Gen->SetWeightedStrengthSource(WeightedStrengthSource);
-	}
-	else
-	{
-		Gen->SetWeightedStrengthValue(WeightedStrength);
-	}
-	Gen->SetLacunarityValue(Lacunarity);
-	Gen->SetOctaveCount(Octaves);
-	return Gen;
-}
-
-UFastNoise2FractalPingPongGenerator* UFastNoise2BlueprintLibrary::MakeFractalPingPongGenerator(UFastNoise2GeneratorBase* Source, UFastNoise2GeneratorBase* PingPongStrengthSource /*= nullptr*/, float PingPongStrength /*= 0.0f*/, UFastNoise2GeneratorBase* GainSource /*= nullptr*/, float Gain /*= 0.5f*/, UFastNoise2GeneratorBase* WeightedStrengthSource /*= nullptr*/, float WeightedStrength /*= 0.f*/, float Lacunarity /*= 2.0f*/, int32 Octaves /*= 3*/)
-{
-	UFastNoise2FractalPingPongGenerator* Gen = NewObject<UFastNoise2FractalPingPongGenerator>();
-	Gen->SetSource(Source);
-	if (PingPongStrengthSource != nullptr)
-	{
-		Gen->SetPingPongStrengthSource(PingPongStrengthSource);
-	}
-	else
-	{
-		Gen->SetPingPongStrengthValue(PingPongStrength);
-	}
 	if (GainSource != nullptr)
 	{
 		Gen->SetGainSource(GainSource);

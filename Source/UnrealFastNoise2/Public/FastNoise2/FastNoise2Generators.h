@@ -11,7 +11,7 @@
 #include "FastNoise/Generators/DomainWarpFractal.h"
 #include "FastNoise/Generators/Modifiers.h"
 #include "FastNoise/Generators/Blends.h"
-#include "FastNoise/SmartNode.h"
+#include "FastNoise/Utility/SmartNode.h"
 #include "FastNoise2Types.h"
 #include "FastNoise2Generators.generated.h"
 
@@ -261,32 +261,6 @@ protected:
 
 //////////////////////////////////////////////////////////////////////////
 
-UCLASS(BlueprintType)
-class UNREALFASTNOISE2_API UFastNoise2OpenSimplex2Generator : public UFastNoise2GeneratorBase
-{
-	GENERATED_BODY()
-
-protected:
-	virtual FastNoise::SmartNode<FastNoise::Generator> InitGenerator() override;
-
-	FastNoise::SmartNode<FastNoise::OpenSimplex2> OpenSimplex2GeneratorInst = nullptr;
-};
-
-//////////////////////////////////////////////////////////////////////////
-
-UCLASS(BlueprintType)
-class UNREALFASTNOISE2_API UFastNoise2OpenSimplex2SGenerator : public UFastNoise2GeneratorBase
-{
-	GENERATED_BODY()
-
-protected:
-	virtual FastNoise::SmartNode<FastNoise::Generator> InitGenerator() override;
-
-	FastNoise::SmartNode<FastNoise::OpenSimplex2S> OpenSimplex2SGeneratorInst = nullptr;
-};
-
-//////////////////////////////////////////////////////////////////////////
-
 UCLASS(Abstract, BlueprintType)
 class UNREALFASTNOISE2_API UFastNoise2CellularGeneratorBase : public UFastNoise2GeneratorBase
 {
@@ -367,29 +341,6 @@ protected:
 
 //////////////////////////////////////////////////////////////////////////
 
-UCLASS(BlueprintType)
-class UNREALFASTNOISE2_API UFastNoise2CellularLookupGenerator : public UFastNoise2CellularGeneratorBase
-{
-	GENERATED_BODY()
-
-public:
-	UFUNCTION(BlueprintCallable, Category = "Fast Noise 2")
-	void SetLookupSource(UFastNoise2GeneratorBase* InSource);
-
-	UFUNCTION(BlueprintSetter, Category = "Fast Noise 2")
-	void SetLookupFrequency(float InLookupFrequency);
-
-protected:
-	UPROPERTY(EditAnywhere, Category = "Fast Noise 2", BlueprintSetter = SetLookupFrequency)
-	float LookupFrequency = 0.1f;
-
-	virtual FastNoise::SmartNode<FastNoise::Generator> InitGenerator() override;
-
-	FastNoise::SmartNode<FastNoise::CellularLookup> CellularLookupGeneratorInst = nullptr;
-};
-
-//////////////////////////////////////////////////////////////////////////
-
 UCLASS(Abstract, BlueprintType)
 class UNREALFASTNOISE2_API UFastNoise2FractalGeneratorBase : public UFastNoise2GeneratorBase
 {
@@ -460,29 +411,6 @@ protected:
 	virtual FastNoise::SmartNode<FastNoise::Generator> InitGenerator() override;
 
 	FastNoise::SmartNode<FastNoise::FractalRidged> FractalRidgedGeneratorInst = nullptr;
-};
-
-//////////////////////////////////////////////////////////////////////////
-
-UCLASS(BlueprintType)
-class UNREALFASTNOISE2_API UFastNoise2FractalPingPongGenerator : public UFastNoise2FractalGeneratorBase
-{
-	GENERATED_BODY()
-
-public:
-	UFUNCTION(BlueprintCallable, Category = "Fast Noise 2")
-	void SetPingPongStrengthSource(UFastNoise2GeneratorBase* InSource);
-
-	UFUNCTION(BlueprintSetter, Category = "Fast Noise 2")
-	void SetPingPongStrengthValue(float InPingPongStrength);
-
-protected:
-	UPROPERTY(EditAnywhere, Category = "Fast Noise 2", BlueprintSetter = SetPingPongStrengthValue)
-	float PingPongStrength = 0.0f;
-
-	virtual FastNoise::SmartNode<FastNoise::Generator> InitGenerator() override;
-
-	FastNoise::SmartNode<FastNoise::FractalPingPong> FractalPingPongGeneratorInst = nullptr;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -602,7 +530,7 @@ class UNREALFASTNOISE2_API UFastNoise2DomainWarpFractalIndependantGenerator : pu
 protected:
 	virtual FastNoise::SmartNode<FastNoise::Generator> InitGenerator() override;
 
-	FastNoise::SmartNode<FastNoise::DomainWarpFractalIndependant> DomainWarpFractalIndependantGeneratorInst = nullptr;
+	FastNoise::SmartNode<FastNoise::DomainWarpFractalIndependent> DomainWarpFractalIndependantGeneratorInst = nullptr;
 };
 
 //////////////////////////////////////////////////////////////////////////

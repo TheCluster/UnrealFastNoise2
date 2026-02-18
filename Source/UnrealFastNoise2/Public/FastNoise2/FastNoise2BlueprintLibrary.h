@@ -43,12 +43,6 @@ public:
 	static UFastNoise2SimplexGenerator* MakeSimplexGenerator();
 
 	UFUNCTION(BlueprintCallable, Category = "Fast Noise 2|Coherent Noise")
-	static UFastNoise2OpenSimplex2Generator* MakeOpenSimplex2Generator();
-
-	UFUNCTION(BlueprintCallable, Category = "Fast Noise 2|Coherent Noise")
-	static UFastNoise2OpenSimplex2SGenerator* MakeOpenSimplex2SGenerator();
-
-	UFUNCTION(BlueprintCallable, Category = "Fast Noise 2|Coherent Noise")
 	static UFastNoise2CellularValueGenerator* MakeCellularValueGenerator(
 		UFastNoise2GeneratorBase* JitterModifierSource
 		, float JitterModifierValue = 1.0f
@@ -62,14 +56,6 @@ public:
 		, int32 DistanceIndex0 = 0
 		, int32 DistanceIndex1 = 1
 		, EFastNoise2CellularDistanceReturnType ReturnType = EFastNoise2CellularDistanceReturnType::Index0);
-
-	UFUNCTION(BlueprintCallable, Category = "Fast Noise 2|Coherent Noise")
-	static UFastNoise2CellularLookupGenerator* MakeCellularLookupGenerator(
-		UFastNoise2GeneratorBase* JitterModifierSource
-		, float JitterModifierValue = 1.0f
-		, EFastNoise2DistanceFunction DistanceFunction = EFastNoise2DistanceFunction::Euclidean
-		, UFastNoise2GeneratorBase* LookupSource = nullptr
-		, float LookupFrequency = 0.1f);
 
 	UFUNCTION(BlueprintCallable, Category = "Fast Noise 2|Fractal")
 	static UFastNoise2FractalFBmGenerator* MakeFractalFBmGenerator(
@@ -85,18 +71,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Fast Noise 2|Fractal")
 	static UFastNoise2FractalRidgedGenerator* MakeFractalRidgedGenerator(
 		UFastNoise2GeneratorBase* Source,
-		UFastNoise2GeneratorBase* GainSource = nullptr,
-		float Gain = 0.5f,
-		UFastNoise2GeneratorBase* WeightedStrengthSource = nullptr,
-		float WeightedStrength = 0.f,
-		float Lacunarity = 2.0f,
-		int32 Octaves = 3);
-
-	UFUNCTION(BlueprintCallable, Category = "Fast Noise 2|Fractal")
-	static UFastNoise2FractalPingPongGenerator* MakeFractalPingPongGenerator(
-		UFastNoise2GeneratorBase* Source,
-		UFastNoise2GeneratorBase* PingPongStrengthSource = nullptr,
-		float PingPongStrength = 0.0f,
 		UFastNoise2GeneratorBase* GainSource = nullptr,
 		float Gain = 0.5f,
 		UFastNoise2GeneratorBase* WeightedStrengthSource = nullptr,
