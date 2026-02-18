@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 using System.IO;
 using UnrealBuildTool;
 
@@ -11,8 +9,6 @@ public class FastNoise2 : ModuleRules
 		PublicIncludePaths.Add(Path.Combine(ModuleDirectory, "include"));
 
 		PublicAdditionalLibraries.Add(StaticLibraryPath);
-
-		//PublicDefinitions.Add("FASTNOISE_LIBRARY_PATH=\"" + RelativeRuntimePath.Replace("\\", "\\\\") + "\"");
 	}
 
 	private string ConfigName
@@ -37,22 +33,22 @@ public class FastNoise2 : ModuleRules
 		{
 			if (Target.Platform == UnrealTargetPlatform.IOS || Target.Platform == UnrealTargetPlatform.Android || Target.Platform.IsInGroup(UnrealPlatformGroup.Microsoft))
 			{
-				return Path.Combine("$(PluginDir)", "Binaries", "ThirdParty", "FastNoise2", PlatformString, ConfigName, LibraryName + StaticLibraryExtension);
+				return Path.Combine(ModuleDirectory, "lib", PlatformString, ConfigName, LibraryName + StaticLibraryExtension);
 			}
 
 			if (Target.Platform == UnrealTargetPlatform.Mac)
 			{
-				return Path.Combine("$(PluginDir)", "Binaries", "ThirdParty", "FastNoise2", PlatformString, "AppleSilicon", ConfigName, LibraryName + StaticLibraryExtension);
+				return Path.Combine(ModuleDirectory, "lib", PlatformString, "AppleSilicon", ConfigName, LibraryName + StaticLibraryExtension);
 			}
 
 			if (Target.Platform == UnrealTargetPlatform.LinuxArm64)
 			{
-				return Path.Combine("$(PluginDir)", "Binaries", "ThirdParty", "FastNoise2", PlatformString, "Arm", ConfigName, LibraryName + StaticLibraryExtension);
+				return Path.Combine(ModuleDirectory, "lib", PlatformString, "Arm", ConfigName, LibraryName + StaticLibraryExtension);
 			}
 
 			if (Target.Platform == UnrealTargetPlatform.Linux)
 			{
-				return Path.Combine("$(PluginDir)", "Binaries", "ThirdParty", "FastNoise2", PlatformString, "x64", ConfigName, LibraryName + StaticLibraryExtension);
+				return Path.Combine(ModuleDirectory, "lib", PlatformString, "x64", ConfigName, LibraryName + StaticLibraryExtension);
 			}
 			
 			throw new BuildException("Unsupported platform");
